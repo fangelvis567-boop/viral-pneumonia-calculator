@@ -481,11 +481,11 @@ def render_tab_nomogram(log_model, inputs, spec):
         st.markdown('<div class="panel-card">', unsafe_allow_html=True)
         st.markdown('<div class="panel-title">🎯 个体化贡献分解（Nomogram 风格）</div>', unsafe_allow_html=True)
 
-        # 横向条形图：贡献度可视化
-        labels_zh = [meta[f]["label_zh"] for f in features]
+        # 横向条形图：贡献度可视化（matplotlib 画布全英文，避免云端缺中文字体）
+        labels_en = [meta[f]["label_en"] for f in features]
         order = np.argsort(contrib)
         c_sorted = contrib[order]
-        labels_sorted = [labels_zh[i] for i in order]
+        labels_sorted = [labels_en[i] for i in order]
         colors = ["#27ae60" if c < 0 else "#e74c3c" for c in c_sorted]
 
         fig, ax = plt.subplots(figsize=(8, 5.6), dpi=110)
@@ -494,8 +494,8 @@ def render_tab_nomogram(log_model, inputs, spec):
         ax.set_yticks(range(len(c_sorted)))
         ax.set_yticklabels(labels_sorted, fontsize=10.5)
         ax.axvline(0, color="#555", linewidth=1, linestyle="--", alpha=0.6)
-        ax.set_xlabel("对 logit 的贡献（标准化系数 × z-score）", fontsize=10.5)
-        ax.set_title(f"截距 (基线 logit) = {spec['intercept']:+.3f}    最终 logit = {np.log(prob/(1-prob)):+.3f}",
+        ax.set_xlabel(r"Logit Contribution ($\beta$ $\times$ z-score)", fontsize=10.5)
+        ax.set_title(f"Intercept = {spec['intercept']:+.3f}    Final logit = {np.log(prob/(1-prob)):+.3f}",
                      fontsize=11, color="#2c3e50", pad=12)
         for spine in ["top", "right"]:
             ax.spines[spine].set_visible(False)
@@ -578,11 +578,11 @@ def render_tab_shap(xgb_model, inputs, spec):
         st.markdown('<div class="panel-card">', unsafe_allow_html=True)
         st.markdown('<div class="panel-title">📈 SHAP 瀑布图 (Waterfall) — 个例分解</div>', unsafe_allow_html=True)
 
-        # 自绘瀑布图（避开 shap.plots.waterfall 对中文/字体的兼容问题）
+        # 自绘瀑布图（避开 shap.plots.waterfall 对中文/字体的兼容问题；标签全英文）
         order2 = np.argsort(np.abs(sv_arr))[::-1]
         plot_n = min(13, len(order2))
         sel = order2[:plot_n][::-1]   # 从下往上：贡献小→大
-        labels = [meta[features[i]]["label_zh"] for i in sel]
+        labels = [meta[features[i]]["label_en"] for i in sel]
         vals = sv_arr[sel]
         colors = ["#27ae60" if v < 0 else "#e74c3c" for v in vals]
 
@@ -607,8 +607,8 @@ def render_tab_shap(xgb_model, inputs, spec):
 
         ax.set_yticks(positions)
         ax.set_yticklabels(labels, fontsize=10.5)
-        ax.set_xlabel("logit 贡献（累计向终值演进）", fontsize=10.5)
-        ax.set_title(f"XGBoost 个例 SHAP 瀑布图 (按 |SHAP| 降序)", fontsize=11, color="#2c3e50", pad=12)
+        ax.set_xlabel("Logit (Cumulative)", fontsize=10.5)
+        ax.set_title("XGBoost SHAP Waterfall (sorted by |SHAP|)", fontsize=11, color="#2c3e50", pad=12)
         for spine in ["top", "right"]:
             ax.spines[spine].set_visible(False)
         ax.spines["left"].set_color("#bdc3c7")
@@ -704,13 +704,13 @@ def render_tab_compare(log_model, xgb_model, inputs, spec):
     fig, ax = plt.subplots(figsize=(9, 1.6), dpi=110)
     ax.barh([0], [p_log], color="#1a6db0", height=0.42, label=f"Logistic {p_log*100:.1f}%")
     ax.barh([1], [p_xgb], color="#16a085", height=0.42, label=f"XGBoost  {p_xgb*100:.1f}%")
-    for thr, lbl, col in [(0.30, "低/中阈", "#f39c12"), (0.70, "中/高阈", "#e74c3c")]:
+    for thr, lbl, col in [(0.30, "Low / Mid", "#f39c12"), (0.70, "Mid / High", "#e74c3c")]:
         ax.axvline(thr, color=col, linewidth=1.2, linestyle="--", alpha=0.6)
         ax.text(thr, 1.65, lbl, color=col, fontsize=8.5, ha="center")
     ax.set_xlim(0, 1)
     ax.set_yticks([0, 1])
     ax.set_yticklabels(["Logistic", "XGBoost"], fontsize=10.5)
-    ax.set_xlabel("预测重症概率", fontsize=10)
+    ax.set_xlabel("Predicted Severity Probability", fontsize=10)
     for spine in ["top", "right", "left"]:
         ax.spines[spine].set_visible(False)
     ax.spines["bottom"].set_color("#bdc3c7")
