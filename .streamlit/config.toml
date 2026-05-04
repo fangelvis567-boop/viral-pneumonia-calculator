@@ -1,0 +1,18 @@
+# Streamlit 主题色配置 — 与 hero banner 蓝绿渐变一致
+# 应用启动时自动加载
+
+[theme]
+primaryColor = "#1a6db0"
+backgroundColor = "#f6f9fc"
+secondaryBackgroundColor = "#ffffff"
+textColor = "#2c3e50"
+font = "sans serif"
+
+[server]
+headless = true
+enableCORS = false
+enableXsrfProtection = true
+maxUploadSize = 5
+
+[browser]
+gatherUsageStats = false
