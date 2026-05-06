@@ -730,9 +730,7 @@ def render_tab_compare(log_model, xgb_model, inputs, spec):
 def render_footer():
     st.markdown(
         '<div class="footer">'
-        '<strong>病毒性肺炎重症概率计算器 v1.0</strong> &nbsp;|&nbsp; '
-        '基于杭州市科技发展计划项目「急性呼吸道病毒感染重症病例预警模型构建」(2023–2025)<br>'
-        '训练数据：树兰医院 + 杭州市第一人民医院 + 杭州市流感监测网络，多中心 642 例 (新冠 525 + 流感 117)<br>'
+        '<strong>病毒性肺炎重症概率计算器 v1.0</strong><br>'
         '<br>'
         '<em>⚠️ 临床免责声明：本工具为辅助决策参考，<strong>不能替代医师诊断</strong>。'
         '所有诊疗决策应结合患者完整病史、体征、动态实验室与影像学综合判断。</em>'

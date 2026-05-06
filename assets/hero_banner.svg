@@ -71,7 +71,7 @@
       Viral Pneumonia Severity Risk Calculator
     </text>
     <text x="700" y="178" font-size="13" text-anchor="middle" opacity="0.78" letter-spacing="1.5">
-      多中心 642 例 · Logistic + XGBoost 双模型对比 · SHAP 个体化解释
+      Logistic + XGBoost 双模型对比 · SHAP 个体化解释
     </text>
     <line x1="540" y1="195" x2="860" y2="195" stroke="#ffffff" stroke-width="0.5" opacity="0.5"/>
   </g>
